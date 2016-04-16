@@ -1,0 +1,46 @@
+package model;
+
+/**
+ * Piece is an abstract class and is the basic unit of the game. 
+ * The piece has a position on the board. Pieces implements the 
+ * Visitable part of the Visitor Design Pattern. They can accept 
+ * different Pieces.
+ * 
+ * @author ChaTeam
+ *
+ */
+public abstract class Piece {
+	
+	private Position pos;
+	
+	/**
+	 * Gives position of the Piece on the board.
+	 * 
+	 * @return Position of the Piece on the board
+	 */
+	public Position getPosition() {
+		SkeletonDisplay.printMethodName();
+		return pos;
+	}
+
+	/**
+	 * Used to change the position of the Piece on the board.
+	 * 
+	 * @param pos	The desired position of the Piece on the board
+	 */
+	public void setPosition(Position pos) {
+		SkeletonDisplay.printMethodName();
+		this.pos = pos;
+	}
+	
+	/**
+	 * This method implements the Visitable part of the Visitor
+	 * design pattern.
+	 * 
+	 * @param p			The MovablePiece that visits the Piece
+	 * @param fromDir	The direction that the MovablePiece is 
+	 * 					visiting (from the perspective of the MovablePiece
+	 */
+	public abstract void accept(MovablePiece p, Direction fromDir);
+	
+}
