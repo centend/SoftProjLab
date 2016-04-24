@@ -46,6 +46,6 @@ public class RatController {
 //	 * Calls the methods of the associate Rat object.
 //	 */
 //	public void run() {
-//		//rat.moveTo(SkeletonDisplay.readDirection());
+//  
 //	}
 }

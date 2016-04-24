@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import main.PrototypeProgram;
+
 /**
  * The Board is responsible for maintaining the spatial layout of 
  * the game and resolving conflicts between Pieces through the Rules 
@@ -78,18 +80,26 @@ public class Board {
 	}
 		
 	/**
+	 * Places the input Cat parameter on a empty position (cell of an 
+	 * EmptyPiece). If the PrototypeProgram is set to deterministic
+	 * then the Cat is placed on the first empty cell in the emptyPieces
+	 * array, otherwise it is placed in a random empty cell.
 	 * 
-	 * @param cat
+	 * @param cat	The Cat to be placed in an empty position on the Board.
 	 */
 	public synchronized void putCatAtRandomEmptyPos(Cat cat) {
-		Random rand = new Random(0);
-		int index = rand.nextInt(emptyPieces.size());
-		EmptyPiece randomEmptyPiece = emptyPieces.get(index);
-		this.putPieceAt(cat, randomEmptyPiece.getPosition());
+		if (PrototypeProgram.isDeterministic()) {
+			this.putPieceAt(cat, emptyPieces.get(0).getPosition());
+		} else {
+			Random rand = new Random(0);
+			int index = rand.nextInt(emptyPieces.size());
+			EmptyPiece randomEmptyPiece = emptyPieces.get(index);
+			this.putPieceAt(cat, randomEmptyPiece.getPosition());
+		}
 	}
 	
 	/**
-	 * Return the piece adjacent to the cell defined by the Position 
+	 * Returns the piece adjacent to the cell defined by the Position 
 	 * parameter in the given direction
 	 * 
 	 * @param pos	The Position of the Piece for which you want the
@@ -159,22 +169,33 @@ public class Board {
 	}
 	
 	/**
+	 * Checks to see if any of the Cats on the Board are trapped and
+	 * updates the state of each Cat's TrapBox.
 	 * 
 	 */
 	public void checkTrappedCats() {
 		for (Cat cat : cats) {
-			this.rules.updateTrappedCat(cat, this.isTrapped(cat));
+			if (this.isTrapped(cat)) {
+				cat.startTrapBox();
+			} else {
+				cat.releaseTrapBox();
+			}
 		}
 	}
 	
 	/**
+	 * Checks if the input Cat parameter is trapped by checking to see 
+	 * if any adjacent piece of the Cat is an EmptyPiece, Cheese, or a
+	 * Rat.
 	 * 
-	 * @return
+	 * @return True if the input Cat parameter is trapped
 	 */
 	private synchronized boolean isTrapped(Cat cat) {
 		for (Direction dir : Direction.values()) {
 			Piece p = this.getAdjacentPiece(cat.getPosition(), dir);
-			if (p.getClass() == EmptyPiece.class) {
+			if (p.getClass() == EmptyPiece.class || 
+					p.getClass() == Cheese.class ||
+					p.getClass() == Rat.class) {
 				return false;
 			}
 		}

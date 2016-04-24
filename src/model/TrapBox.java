@@ -1,5 +1,12 @@
 package model;
 
+/**
+ * The TrapBox is responsible for disposing a Cat that has
+ * been trapped for five ticks.
+ * 
+ * @author ChaTeam
+ *
+ */
 public class TrapBox extends Thread {
 	private Rules rules;
 	private Cat cat;
@@ -9,9 +16,11 @@ public class TrapBox extends Thread {
 	private final int TRAP_TIME = 5;
 	
 	/**
+	 * This constructor creates a new TrapBox associated with
+	 * the input parameters.
 	 * 
-	 * @param rules
-	 * @param cat
+	 * @param rules	The Rules with which the TrapBox should be associated.
+	 * @param cat	The Cat with which the TrapBox should be associated.
 	 */
 	public TrapBox(Rules rules, Cat cat) {
 		this.rules = rules;
@@ -19,7 +28,10 @@ public class TrapBox extends Thread {
 	}
 	
 	/**
-	 * 
+	 * This method is called when the thread of the TrapBox
+	 * is started. It checks to see if 5 ticks have elapsed
+	 * since it started, if so it disposes the associated
+	 * Cat.
 	 */
 	public void run() {
 		canContinue = true;
@@ -37,7 +49,7 @@ public class TrapBox extends Thread {
 	}
 
 	/**
-	 * 
+	 * Stops the TrapBox thread.
 	 */
 	public void cancel() {
 		canContinue = false;

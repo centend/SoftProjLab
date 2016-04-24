@@ -70,8 +70,11 @@ public class Cat extends MovablePiece {
 	public void visit(Cheese cheese, Direction fromDir) {
 		this.board.getRules().resolve(this, cheese);	
 	}
-
-	public TrapBox getTrapBox() {
-		return trapBox;
+	
+	/**
+	 * Starts the thread of the TrapBox of the Cat.
+	 */
+	public void startTrapBox() {
+		trapBox.start();
 	}
 }

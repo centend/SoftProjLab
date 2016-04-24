@@ -66,7 +66,7 @@ public class CatController extends Thread {
 	}
 	
 	/**
-	 * 
+	 * Stops the CatController Thread from running.
 	 */
 	public void cancel() {
 		canContinue = false;

@@ -9,16 +9,13 @@ import java.util.ArrayList;
  * @author ChaTeam
  *
  */
-public class Initializer 
-{
+public class Initializer {
 	private Board board;
 	private RatController ratController;
 	private ArrayList<CatController> catControllers = new ArrayList<>();
 	private CatSpawner catSpawner;
 	
-	public Initializer() {
-		
-	}
+	public Initializer() {}
 	
 	public void initBoard(int rows, int cols) {
 		board = new Board(rows, cols);
@@ -44,12 +41,14 @@ public class Initializer
 
 	public void resetBoard() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void gameOver() {
-		// TODO Auto-generated method stub
-		
+		catSpawner.cancel();
+		for (CatController catController : catControllers) {
+			catController.getPiece().releaseTrapBox();
+			catController.cancel();
+		}
 	}
 
 	public void stopCatController(Cat deadCat) {

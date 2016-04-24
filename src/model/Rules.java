@@ -9,7 +9,6 @@ package model;
  *
  */
 public class Rules {
-	
 	private Board board;
 	private PlayerStats playerStats;
 	private Initializer init;
@@ -29,8 +28,10 @@ public class Rules {
 	}
 	
 	/**
+	 * This method returns the PlayerStats object associated with the 
+	 * Rules.
 	 * 
-	 * @return
+	 * @return	A reference to the PlayerStats object of the Rules
 	 */
 	public PlayerStats getStats() {
 		return playerStats;
@@ -69,7 +70,10 @@ public class Rules {
 	}
 	
 	/**
-	 * 
+	 * This method calls the loseLife method of the PlayerStats
+	 * and checks if the player has enough lives to continue. If so 
+	 * it resets the board otherwise it calls the gameOver method of 
+	 * the associated Initializer.
 	 */
 	private void playerLosesLife() {
 		playerStats.loseLife();
@@ -85,8 +89,8 @@ public class Rules {
 	// -------------------------
 	// Rules for Cats
 	/**
-	 * Resolves the visit of a Rat by a Cat. The Player should lose
-	 * a life (not implemented in the Skeleton).
+	 * Resolves the visit of a Rat by a Cat. The Player loses
+	 * a life.
 	 * 
 	 * @param fromCat	The Visitor Piece
 	 * @param toRat		The Visited Piece
@@ -163,8 +167,8 @@ public class Rules {
 	}
 	
 	/**
-	 * Resolves the visit of a Cat by a Rat. The Player should lose
-	 * a life (not implemented in the Skeleton).
+	 * Resolves the visit of a Cat by a Rat. The Player loses
+	 * a life.
 	 * 
 	 * @param fromRat	The Visitor Piece
 	 * @param toCat		The Visited Piece
@@ -212,7 +216,8 @@ public class Rules {
 
 	/**
 	 * Resolves the visit of a Cheese by a Rat. The Rat eats the 
-	 * cheese by calling the eat method of Rules.
+	 * cheese by calling the eat method of Rules. The PlayerStats
+	 * score is increased by CHEESE_POINTS.
 	 * 
 	 * @param fromRat	The Visitor Piece
 	 * @param toCheese	The Visited Piece
@@ -283,7 +288,8 @@ public class Rules {
 	
 	/**
 	 * Resolves the visit of a Cheese by a MovableBlock. The MovableBlock 
-	 * eats the cheese by calling the eat method of Rules.
+	 * eats the cheese by calling the eat method of Rules. The PlayerStats
+	 * score is increased by CHEESE_POINTS.
 	 * 
 	 * @param fromMovBlock	The Visitor Piece
 	 * @param toCheese		The Visited Piece
@@ -292,20 +298,13 @@ public class Rules {
 		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromMovBlock, toCheese);
 	}
-
-	/**
-	 * 
-	 * @param cat
-	 * @param trapped
-	 */
-	public void updateTrappedCat(Cat cat, boolean trapped) {
-		if (trapped) {
-			cat.getTrapBox();
-		} else {
-			cat.releaseTrapBox();
-		}
-	}
 	
+	/**
+	 * This method puts a Cheese in place of the input parameter Cat. It then
+	 * stops the associated CatController using the Initializer. 
+	 * 
+	 * @param deadCat	The Cat to be disposed
+	 */
 	public void disposeOfBody(Cat deadCat) {
 		board.putPieceAt(new Cheese(), deadCat.getPosition());
 		init.stopCatController(deadCat);
