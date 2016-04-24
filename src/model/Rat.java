@@ -15,87 +15,46 @@ public class Rat extends MovablePiece {
 	 */
 	public Rat(Board board) {
 		super(board);
-		SkeletonDisplay.printMethodName();
 	}
 
 	@Override
 	public void moveTo(Direction dir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		Piece p = this.board.getAdjacentPiece(this.getPosition(), dir);
-		p.accept(this, dir);	
-		
-		SkeletonDisplay.decreaseTab();
+		p.accept(this, dir);
 	}	
 	
 	@Override
 	public void accept(MovablePiece p, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		p.visit(this, fromDir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	@Override
 	public void visit(Rat rat, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.board.getRules().resolve(this,rat);
-		
-		SkeletonDisplay.decreaseTab();		
 	}
 
 	@Override
 	public void visit(Cat cat, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.board.getRules().resolve(this,cat);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	@Override
 	public void visit(MovableBlock movBlock, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.board.getRules().resolve(this, movBlock, fromDir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	@Override
 	public void visit(ImmovableBlock immoBlock, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.board.getRules().resolve(this, immoBlock);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	@Override
 	public void visit(EmptyPiece empty, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
-		this.board.getRules().resolve(this, empty);	
-		
-		SkeletonDisplay.decreaseTab();	
+		this.board.getRules().resolve(this, empty);
 	}
 
 	@Override
 	public void visit(Cheese cheese, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
-		this.board.getRules().resolve(this, cheese);	
-		
-		SkeletonDisplay.decreaseTab();	
+		this.board.getRules().resolve(this, cheese);
 	}
 }

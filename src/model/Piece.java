@@ -19,7 +19,6 @@ public abstract class Piece {
 	 * @return Position of the Piece on the board
 	 */
 	public Position getPosition() {
-		SkeletonDisplay.printMethodName();
 		return pos;
 	}
 
@@ -29,7 +28,6 @@ public abstract class Piece {
 	 * @param pos	The desired position of the Piece on the board
 	 */
 	public void setPosition(Position pos) {
-		SkeletonDisplay.printMethodName();
 		this.pos = pos;
 	}
 	

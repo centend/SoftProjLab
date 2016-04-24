@@ -11,6 +11,10 @@ package model;
 public class Rules {
 	
 	private Board board;
+	private PlayerStats playerStats;
+	private Initializer init;
+	
+	private final int CHEESE_POINTS = 10;
 	
 	/**
 	 * This constructor sets the association of the instantiated
@@ -20,8 +24,16 @@ public class Rules {
 	 * 				associated
 	 */
 	public Rules(Board board) {
-		SkeletonDisplay.printMethodName();
 		this.board = board;
+		this.playerStats = new PlayerStats(1);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public PlayerStats getStats() {
+		return playerStats;
 	}
 	
 	/**
@@ -34,17 +46,11 @@ public class Rules {
 	 */
 	// the 'eater' piece eats the 'eaten' piece
 	private void eat(Piece eater, Piece eaten) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		EmptyPiece newEmpty = new EmptyPiece();
 		newEmpty.setPosition(eaten.getPosition());
 		board.switchPieces(eater, newEmpty);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
-	
 	/**
 	 * If possible, recursively moves the Pieces in the supplied direction.
 	 * 
@@ -54,17 +60,24 @@ public class Rules {
 	 * 					the Visitor Piece
 	 */
 	private void moveIfPossible(MovablePiece fromPiece, MovablePiece toPiece, Direction dir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// move the toPiece THEN the fromPiece (if possible)
 		toPiece.moveTo(dir);
 		Piece adjacentPiece = this.board.getAdjacentPiece(fromPiece.getPosition(), dir);
 		if (adjacentPiece != toPiece) {
 			board.switchPieces(fromPiece, adjacentPiece);
 		}
-
-		SkeletonDisplay.decreaseTab();
+	}
+	
+	/**
+	 * 
+	 */
+	private void playerLosesLife() {
+		playerStats.loseLife();
+		if (playerStats.canContinue()) {
+			init.resetBoard();
+		} else {
+			init.gameOver();
+		}
 	}
 	
 	
@@ -79,8 +92,7 @@ public class Rules {
 	 * @param toRat		The Visited Piece
 	 */
 	public void resolve(Cat fromCat, Rat toRat) {
-		SkeletonDisplay.printMethodName();
-		// Lose a life
+		playerLosesLife();
 	}
 
 	/**
@@ -90,7 +102,6 @@ public class Rules {
 	 * @param toCat		The Visited Piece
 	 */
 	public void resolve(Cat fromCat, Cat toCat) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing
 	}
 
@@ -101,7 +112,6 @@ public class Rules {
 	 * @param toMovBlock	The Visited Piece
 	 */
 	public void resolve(Cat fromCat, MovableBlock toMovBlock) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing		
 	}
 
@@ -112,7 +122,6 @@ public class Rules {
 	 * @param toImmoBlock	The Visited Piece
 	 */
 	public void resolve(Cat fromCat, ImmovableBlock toImmoBlock) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing
 	}
 	
@@ -124,13 +133,8 @@ public class Rules {
 	 * @param toEmpty	The Visited Piece
 	 */
 	public void resolve(Cat fromCat, EmptyPiece toEmpty) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// cat moves
 		board.switchPieces(fromCat, toEmpty);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 	
 	/**
@@ -141,13 +145,8 @@ public class Rules {
 	 * @param toCheese	The Visited Piece
 	 */
 	public void resolve(Cat fromCat, Cheese toCheese) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// the cat eats the cheese
 		this.eat(fromCat, toCheese);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 	
 	
@@ -160,7 +159,6 @@ public class Rules {
 	 * @param toRat		The Visited Piece
 	 */
 	public void resolve(Rat fromRat, Rat toRat) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing		
 	}
 	
@@ -172,8 +170,7 @@ public class Rules {
 	 * @param toCat		The Visited Piece
 	 */
 	public void resolve(Rat fromRat, Cat toCat) {
-		SkeletonDisplay.printMethodName();
-		// loose life
+		playerLosesLife();
 	}
 	
 	/**
@@ -187,13 +184,8 @@ public class Rules {
 	 * 						of the fromRat
 	 */
 	public void resolve(Rat fromRat, MovableBlock toMovBlock, Direction dir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// move the blocks if possible
 		this.moveIfPossible(fromRat, toMovBlock, dir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	/**
@@ -203,7 +195,6 @@ public class Rules {
 	 * @param toImmoBlock	The Visited Piece
 	 */
 	public void resolve(Rat fromRat, ImmovableBlock toImmoBlock) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing
 	}
 	
@@ -215,13 +206,8 @@ public class Rules {
 	 * @param toEmpty	The Visited Piece
 	 */
 	public void resolve(Rat fromRat, EmptyPiece toEmpty) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// the rat moves
 		board.switchPieces(fromRat, toEmpty);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	/**
@@ -232,13 +218,8 @@ public class Rules {
 	 * @param toCheese	The Visited Piece
 	 */
 	public void resolve(Rat fromRat, Cheese toCheese) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
-		// the rat eat the cheese and the player gets points
+		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromRat, toCheese);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	
@@ -251,7 +232,6 @@ public class Rules {
 	 * @param toRat			The Visited Piece
 	 */
 	public void resolve(MovableBlock fromMovBlock, Rat toRat) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing		
 	}
 
@@ -262,7 +242,6 @@ public class Rules {
 	 * @param toCat				The Visited Piece
 	 */
 	public void resolve(MovableBlock fromMovBlock, Cat toCat) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing
 	}
 	
@@ -277,12 +256,7 @@ public class Rules {
 	 * 						of the fromRat
 	 */
 	public void resolve(MovableBlock fromMovBlock, MovableBlock toMovBlock, Direction dir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.moveIfPossible(fromMovBlock, toMovBlock, dir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 	
 	/**
@@ -292,7 +266,6 @@ public class Rules {
 	 * @param toImmoBlock	The Visited Piece
 	 */
 	public void resolve(MovableBlock fromMovBlock, ImmovableBlock toImmoBlock) {
-		SkeletonDisplay.printMethodName();
 		// Do nothing
 	}
 	
@@ -304,13 +277,8 @@ public class Rules {
 	 * @param toEmpty		The Visited Piece
 	 */
 	public void resolve(MovableBlock fromMovBlock, EmptyPiece toEmpty) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		// the movable block is moved
 		board.switchPieces(fromMovBlock, toEmpty);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 	
 	/**
@@ -321,12 +289,25 @@ public class Rules {
 	 * @param toCheese		The Visited Piece
 	 */
 	public void resolve(MovableBlock fromMovBlock, Cheese toCheese) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
-		// movable block is moved and cheese is eaten
+		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromMovBlock, toCheese);
-		
-		SkeletonDisplay.decreaseTab();
+	}
+
+	/**
+	 * 
+	 * @param cat
+	 * @param trapped
+	 */
+	public void updateTrappedCat(Cat cat, boolean trapped) {
+		if (trapped) {
+			cat.getTrapBox();
+		} else {
+			cat.releaseTrapBox();
+		}
+	}
+	
+	public void disposeOfBody(Cat deadCat) {
+		board.putPieceAt(new Cheese(), deadCat.getPosition());
+		init.stopCatController(deadCat);
 	}
 }

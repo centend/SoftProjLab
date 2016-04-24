@@ -8,18 +8,11 @@ package model;
  */
 public class EmptyPiece extends Piece {
 
-	public EmptyPiece() {
-		SkeletonDisplay.printMethodName();
-	}
+	public EmptyPiece() {}
 	
 	@Override
 	public void accept(MovablePiece p, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		p.visit(this, fromDir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 

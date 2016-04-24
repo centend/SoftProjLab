@@ -8,18 +8,11 @@ package model;
  */
 public class Cheese extends Piece {
 
-	public Cheese() {
-		SkeletonDisplay.printMethodName();
-	}
+	public Cheese() {}
 	
 	@Override
-	public void accept(MovablePiece p, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
+	public void accept(MovablePiece p, Direction fromDir) {		
 		p.visit(this, fromDir);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 }

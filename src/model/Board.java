@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * The Board is responsible for maintaining the spatial layout of 
  * the game and resolving conflicts between Pieces through the Rules 
@@ -16,6 +19,9 @@ public class Board {
 	private Piece[][] cells;
 	private Rules rules;
 	
+	private ArrayList<Cat> cats;
+	private ArrayList<EmptyPiece> emptyPieces;
+	
 	/** 
 	 * The constructor for the Board creates a two-dimensional array
 	 * of Pieces of size rows by cols. It also creates and stores a 
@@ -25,13 +31,13 @@ public class Board {
 	 * @param cols	The number of columns the board should have
 	 */
 	public Board(int rows, int cols) {
-		SkeletonDisplay.printMethodName();
-		
 		this.rows = rows;
 		this.cols = cols;
 		this.cells = new Piece[rows][cols];
 		this.rules = new Rules(this);
-//		this.cats = new ArrayList<Cat>();
+
+		this.cats = new ArrayList<Cat>();
+		this.emptyPieces = new ArrayList<EmptyPiece>();
 	}
 	
 	/** 
@@ -40,27 +46,48 @@ public class Board {
 	 * @return Reference to the Rules object of the Board
 	 */
 	public Rules getRules() {
-		SkeletonDisplay.printMethodName();
 		return this.rules;
 	}
 	
 	/**
 	 * Puts the input piece at the given position. This method does not check
-	 * for any conflicts.
+	 * for any conflicts. If there was previous EmptyPiece at that position 
+	 * then it is removed from the emptyPieces list. If the input Piece is an
+	 * EmptyPiece it is added to the emptyPieces list.
 	 * 
 	 * @param piece	The Piece to be moved.
 	 * @param pos	The desired Position of the Piece to be moved.
 	 */
-	public void putPieceAt(Piece piece, Position pos) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
+	public synchronized void putPieceAt(Piece piece, Position pos) {
+		// Checking to see if the previous Piece at this position was an Empty Piece
+		Piece previousPiece = this.cells[pos.getRow()][pos.getColumn()];
+		if (previousPiece != null) {
+			if (previousPiece.getClass() == EmptyPiece.class) {
+				emptyPieces.remove(previousPiece);
+			}
+		}
+		
+		// Adding the input Piece to the emptyPieces list if it is an EmptyPiece
+		if (piece.getClass() == EmptyPiece.class) {
+			emptyPieces.add((EmptyPiece)piece);
+		}
 		
 		this.cells[pos.getRow()][pos.getColumn()] = piece;
 		piece.setPosition(pos);
-		
-		SkeletonDisplay.decreaseTab();
+
 	}
 		
+	/**
+	 * 
+	 * @param cat
+	 */
+	public synchronized void putCatAtRandomEmptyPos(Cat cat) {
+		Random rand = new Random(0);
+		int index = rand.nextInt(emptyPieces.size());
+		EmptyPiece randomEmptyPiece = emptyPieces.get(index);
+		this.putPieceAt(cat, randomEmptyPiece.getPosition());
+	}
+	
 	/**
 	 * Return the piece adjacent to the cell defined by the Position 
 	 * parameter in the given direction
@@ -74,8 +101,7 @@ public class Board {
 	 * 				an ImmovableBlock in the case that the Position and
 	 * 				given Direction are invalid. 
 	 */
-	public Piece getAdjacentPiece(Position pos, Direction dir) {
-		SkeletonDisplay.printMethodName();
+	public synchronized Piece getAdjacentPiece(Position pos, Direction dir) {
 		int dir_row = 0, dir_col = 0;
 		switch (dir) {
 			case UP:
@@ -124,16 +150,34 @@ public class Board {
 	 * @param p2	The second Piece.
 	 */
 	// switch the two pieces on the board
-	public void switchPieces(Piece p1, Piece p2) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
+	public synchronized void switchPieces(Piece p1, Piece p2) {
 		Position pos1 = p1.getPosition();
 		Position pos2 = p2.getPosition();
 		
 		this.putPieceAt(p1, pos2);
 		this.putPieceAt(p2, pos1);
-		
-		SkeletonDisplay.decreaseTab();
+	}
+	
+	/**
+	 * 
+	 */
+	public void checkTrappedCats() {
+		for (Cat cat : cats) {
+			this.rules.updateTrappedCat(cat, this.isTrapped(cat));
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private synchronized boolean isTrapped(Cat cat) {
+		for (Direction dir : Direction.values()) {
+			Piece p = this.getAdjacentPiece(cat.getPosition(), dir);
+			if (p.getClass() == EmptyPiece.class) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

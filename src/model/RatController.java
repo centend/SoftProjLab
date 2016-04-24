@@ -19,12 +19,7 @@ public class RatController {
 	 * 				of Rat
 	 */
 	public RatController(Board board) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		this.rat = new Rat(board);
-		
-		SkeletonDisplay.decreaseTab();
 	}
 
 	/**
@@ -33,20 +28,24 @@ public class RatController {
 	 * @return Rat controlled by this controller
 	 */
 	public Rat getPiece() {
-		SkeletonDisplay.printMethodName();
 		return this.rat;
 	}
 	
+	
 	/**
-	 * Calls the methods of the associate Rat object.
+	 * Calls the move method of the associated Cat object with
+	 * the input parameter.
+	 * 
+	 * @param dir	The Direction the cat should move
 	 */
-	public void run() {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.println("In which direction should the rat move?");
-		SkeletonDisplay.increaseTab();
-		
-		rat.moveTo(SkeletonDisplay.readDirection());
-		
-		SkeletonDisplay.decreaseTab();
+	public void moveRat(Direction dir) {
+		rat.moveTo(dir);
 	}
+	
+//	/**
+//	 * Calls the methods of the associate Rat object.
+//	 */
+//	public void run() {
+//		//rat.moveTo(SkeletonDisplay.readDirection());
+//	}
 }

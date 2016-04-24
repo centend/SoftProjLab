@@ -20,7 +20,6 @@ public abstract class MovablePiece extends Piece {
 	 * associated
 	 */
 	public MovablePiece(Board board) {
-//		SkeletonDisplay.printMethodName();
 		this.board = board;
 	}
 	
