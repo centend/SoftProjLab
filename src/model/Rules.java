@@ -1,5 +1,7 @@
 package model;
 
+import view.PrototypeIO;
+
 /**
  * The Rules class is responsible for resolving conflicts between 
  * the different Pieces. This class is considered necessary so that 
@@ -27,6 +29,10 @@ public class Rules {
 		this.playerStats = new PlayerStats(1);
 	}
 	
+	public void setInitializer(Initializer init) {
+		this.init = init;
+	}
+	
 	/**
 	 * This method returns the PlayerStats object associated with the 
 	 * Rules.
@@ -49,6 +55,9 @@ public class Rules {
 	private void eat(Piece eater, Piece eaten) {
 		EmptyPiece newEmpty = new EmptyPiece();
 		newEmpty.setPosition(eaten.getPosition());
+		
+		PrototypeIO.printCreatedReplaces(newEmpty, eaten);
+		
 		board.switchPieces(eater, newEmpty);
 	}
 
@@ -88,6 +97,21 @@ public class Rules {
 	// Rules of the Game
 	// -------------------------
 	// Rules for Cats
+	
+	/**
+	 * This method puts a Cheese in place of the input parameter Cat. It then
+	 * stops the associated CatController using the Initializer. 
+	 * 
+	 * @param deadCat	The Cat to be disposed
+	 */
+	public void disposeOfBody(Cat deadCat) {
+		Cheese cheese = new Cheese();
+		board.putPieceAt(cheese, deadCat.getPosition());
+		init.stopCatController(deadCat);
+		PrototypeIO.printCreatedReplaces(cheese, deadCat);
+		PrototypeIO.printCatDies(deadCat);
+	}
+	
 	/**
 	 * Resolves the visit of a Rat by a Cat. The Player loses
 	 * a life.
@@ -96,6 +120,7 @@ public class Rules {
 	 * @param toRat		The Visited Piece
 	 */
 	public void resolve(Cat fromCat, Rat toRat) {
+		PrototypeIO.printRatDies(toRat);
 		playerLosesLife();
 	}
 
@@ -174,6 +199,7 @@ public class Rules {
 	 * @param toCat		The Visited Piece
 	 */
 	public void resolve(Rat fromRat, Cat toCat) {
+		PrototypeIO.printRatDies(fromRat);
 		playerLosesLife();
 	}
 	
@@ -297,16 +323,5 @@ public class Rules {
 	public void resolve(MovableBlock fromMovBlock, Cheese toCheese) {
 		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromMovBlock, toCheese);
-	}
-	
-	/**
-	 * This method puts a Cheese in place of the input parameter Cat. It then
-	 * stops the associated CatController using the Initializer. 
-	 * 
-	 * @param deadCat	The Cat to be disposed
-	 */
-	public void disposeOfBody(Cat deadCat) {
-		board.putPieceAt(new Cheese(), deadCat.getPosition());
-		init.stopCatController(deadCat);
 	}
 }

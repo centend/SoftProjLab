@@ -15,5 +15,8 @@ public class EmptyPiece extends Piece {
 		p.visit(this, fromDir);
 	}
 
-
+	@Override
+	public String getSymbol() {
+		return "E";
+	}
 }

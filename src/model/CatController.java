@@ -17,11 +17,12 @@ public class CatController extends Thread {
 	 * This constructor creates a new Cat object with which
 	 * the controller is associated.
 	 * 
+	 * @param id	The id of the Cat.
 	 * @param board	This parameter is passed to the constructor 
 	 * 				of Cat
 	 */
-	public CatController(Board board) {
-		this.cat = new Cat(board);
+	public CatController(Board board, int id) {
+		this.cat = new Cat(board, id);
 	}
 
 	/**

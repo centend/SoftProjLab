@@ -15,4 +15,8 @@ public class Cheese extends Piece {
 		p.visit(this, fromDir);
 	}
 
+	@Override
+	public String getSymbol() {
+		return "F";
+	}
 }

@@ -39,7 +39,7 @@ public class CatSpawner extends Thread {
 					e.printStackTrace();
 				}
 			}
-			init.initNewCat();
+			init.spawnNewCat();
 		}
 	}
 	

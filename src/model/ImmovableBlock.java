@@ -15,4 +15,9 @@ public class ImmovableBlock extends Piece {
 	public void accept(MovablePiece p, Direction fromDir) {
 		p.visit(this, fromDir);
 	}
+	
+	@Override
+	public String getSymbol() {
+		return "I";
+	}
 }

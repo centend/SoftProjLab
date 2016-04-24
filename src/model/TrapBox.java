@@ -41,6 +41,7 @@ public class TrapBox extends Thread {
 				Thread.sleep(100);
 				if (Clock.getTime() >= startTime + TRAP_TIME) {
 					rules.disposeOfBody(this.cat);
+					canContinue = false;
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();

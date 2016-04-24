@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import main.PrototypeProgram;
+import view.PrototypeIO;
 
 /**
  * The Board is responsible for maintaining the spatial layout of 
@@ -161,6 +162,8 @@ public class Board {
 	 */
 	// switch the two pieces on the board
 	public synchronized void switchPieces(Piece p1, Piece p2) {
+		PrototypeIO.printSwitch(p1, p2);
+		
 		Position pos1 = p1.getPosition();
 		Position pos2 = p2.getPosition();
 		

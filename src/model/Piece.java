@@ -41,4 +41,10 @@ public abstract class Piece {
 	 */
 	public abstract void accept(MovablePiece p, Direction fromDir);
 	
+	/**
+	 * This method returns the symbol of the Piece (e.g. R for rat)
+	 * 
+	 * @return	String representation of the symbol
+	 */
+	public abstract String getSymbol();
 }

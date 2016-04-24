@@ -9,18 +9,20 @@ package model;
  *
  */
 public abstract class MovablePiece extends Piece {
-	
+	private int id;
 	protected Board board;
 	
 	/**
 	 * This constructor sets the association between the MovablePiece
 	 * and the board.
 	 * 
+	 * @param id	The id of the MovablePiece
 	 * @param board	The board with which the MovablePiece should be 
 	 * associated
 	 */
-	public MovablePiece(Board board) {
+	public MovablePiece(Board board, int id) {
 		this.board = board;
+		this.id = id;
 	}
 	
 	/**
@@ -97,4 +99,13 @@ public abstract class MovablePiece extends Piece {
 	 * 					of the MovablePiece
 	 */
 	public abstract void visit(Cheese cheese, Direction fromDir);
+	
+	/**
+	 * This method returns the id of the MovablePiece.
+	 * 
+	 * @return	id of of the MovablePiece
+	 */
+	public int getId() {
+		return id;
+	}
 }

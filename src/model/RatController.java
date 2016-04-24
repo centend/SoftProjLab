@@ -15,11 +15,12 @@ public class RatController {
 	 * This constructor creates a new Rat object with which
 	 * the controller is associated.
 	 * 
+	 * @param id	The id of the Rat.
 	 * @param board	This parameter is passed to the constructor 
 	 * 				of Rat
 	 */
-	public RatController(Board board) {
-		this.rat = new Rat(board);
+	public RatController(Board board, int id) {
+		this.rat = new Rat(board, id);
 	}
 
 	/**

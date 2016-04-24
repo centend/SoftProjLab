@@ -14,10 +14,11 @@ public class Cat extends MovablePiece {
 	 * This constructor calls the constructor of MovablePiece to
 	 * set the reference with the board.
 	 * 
+	 * @param id	The id of the Cat.
 	 * @param board	The Board with which the Cat should be associated.
 	 */
-	public Cat(Board board) {
-		super(board);
+	public Cat(Board board, int id) {
+		super(board, id);
 		trapBox = new TrapBox(board.getRules(), this);
 		trapBox.start();
 	}
@@ -76,5 +77,10 @@ public class Cat extends MovablePiece {
 	 */
 	public void startTrapBox() {
 		trapBox.start();
+	}
+	
+	@Override
+	public String getSymbol() {
+		return "C";
 	}
 }

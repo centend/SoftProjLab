@@ -5,10 +5,11 @@ public class MovableBlock extends MovablePiece {
 	 * This constructor calls the constructor of MovablePiece to
 	 * set the reference with the board.
 	 * 
+	 * @param id	The id of the MovableBlock.
 	 * @param board	The Board with which the MovableBlock should be associated.
 	 */
-	public MovableBlock(Board board) {
-		super(board);
+	public MovableBlock(Board board, int id) {
+		super(board, id);
 	}
 
 	@Override
@@ -50,5 +51,10 @@ public class MovableBlock extends MovablePiece {
 	@Override
 	public void visit(Cheese cheese, Direction fromDir) {
 		this.board.getRules().resolve(this, cheese);
+	}
+	
+	@Override
+	public String getSymbol() {
+		return "M";
 	}
 }

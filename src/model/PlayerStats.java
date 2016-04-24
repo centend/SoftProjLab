@@ -1,5 +1,7 @@
 package model;
 
+import view.PrototypeIO;
+
 /**
  * The PlayerStats is responsible for maintaining the 
  * player's score and the number of lives remaining.
@@ -24,6 +26,7 @@ public class PlayerStats {
 	 * 			score should increase by.
 	 */
 	public void addPoints(int points) {
+		PrototypeIO.printScore(score, score + points);
 		this.score += points;
 	}
 	
@@ -32,6 +35,7 @@ public class PlayerStats {
 	 * player by one.
 	 */
 	public void loseLife() {
+		PrototypeIO.printLives(lives, lives - 1);
 		lives -= 1;
 	}
 	
@@ -41,7 +45,7 @@ public class PlayerStats {
 	 * @return true if lives is greater than or equal to zero.
 	 */
 	public boolean canContinue() {
-		return (lives >= 0);
+		return (lives > 0);
 	}
 	
 	/** 
