@@ -1,6 +1,7 @@
 package main;
 
-import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,14 @@ public class PrototypeProgram {
 	private static Initializer init; 
 	
 	public static void main(String[] args) {
-		PrototypeIO.setStream(new InputStreamReader(System.in));
+		if (args.length > 0) {
+			try {
+				PrototypeIO.setFileReader(new FileReader(args[0]));
+			} catch (FileNotFoundException e) {
+				System.out.println("Invalid file");
+				System.exit(-2);
+			}
+		}
 		
 		init = new Initializer();
 		

@@ -1,6 +1,7 @@
 package view;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -10,8 +11,8 @@ public class PrototypeIO {
 	private static BufferedReader br = new BufferedReader(
 			new InputStreamReader(System.in));
 	
-	public static void setStream(InputStreamReader isr) {
-		br = new BufferedReader(isr);
+	public static void setFileReader(FileReader fr) {
+		br = new BufferedReader(fr);
 	}
 	
 	public static String getCommand() {
