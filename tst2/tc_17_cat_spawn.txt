@@ -1,3 +1,0 @@
-board(1, 2) -d "[E, E]"
-tick -s 61
-exit
