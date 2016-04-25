@@ -10,14 +10,14 @@ package model;
 public class CatSpawner extends Thread {
 	private Initializer init;
 	private int startTime;
-	private boolean canContinue = false;
+	private volatile boolean canContinue = true;
 	
 	private final int SPAWN_TIME = 60;
 	/**
 	 * This constructor creates a new CatSpawner associated with
 	 * the input parameter.
 	 * 
-	 * @param init	The Initialzer with which the CatSpawner should be associated.
+	 * @param init	The Initializer with which the CatSpawner should be associated.
 	 */
 	public CatSpawner(Initializer init) {
 		this.init = init;
@@ -29,17 +29,18 @@ public class CatSpawner extends Thread {
 	 * more than SPAWN_TIME ticks.
 	 */
 	public void run() {
-		canContinue = true;
+		startTime = Clock.getTime();
 		while (canContinue) {
-			startTime = Clock.getTime();
-			while (Clock.getTime() - startTime < SPAWN_TIME) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			if (Clock.getTime() - startTime >= SPAWN_TIME) {
+				// Wait for time to elapse
+				init.spawnNewCat();
+				startTime = Clock.getTime();
 			}
-			init.spawnNewCat();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				canContinue = false;
+			}
 		}
 	}
 	

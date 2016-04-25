@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.regex.Matcher;
@@ -8,20 +9,51 @@ import java.util.regex.Pattern;
 import model.*;
 import view.PrototypeIO;
 
+/**
+ * The PrototypeProgram class implements the parsing of test-cases.
+ * 
+ * @author ChaTeam
+ *
+ */
 public class PrototypeProgram {
 	private static boolean isDeterministic = true;
 	private static Initializer init; 
 	
 	public static void main(String[] args) {
-		if (args.length > 0) {
+		if (args.length > 0 && 
+				args[0].equalsIgnoreCase("-test")) {
+			// Process test cases
 			try {
-				PrototypeIO.setFileReader(new FileReader(args[0]));
-			} catch (FileNotFoundException e) {
-				System.out.println("Invalid file");
+				File testFolder = new File("tst");
+				for (File testFile : testFolder.listFiles()) {
+			        PrototypeIO.println(testFile.getName());
+			        PrototypeIO.setFileReader(new FileReader(
+			        		testFolder.getName() + "/" + testFile.getName()));
+			        processInput();
+			        PrototypeIO.println("---");
+			    }
+			} 
+			catch (FileNotFoundException e) {
+				PrototypeIO.printInvalidFile("test");
 				System.exit(-2);
 			}
+		} else { // Check if the argument is a file 
+			if (args.length > 0) {
+				try {
+					PrototypeIO.setFileReader(new FileReader(args[0]));
+				} catch (FileNotFoundException e) {
+					PrototypeIO.printInvalidFile(args[0]);
+					System.exit(-2);
+				}
+				// Process single file or STDIN
+			}
+			processInput();
 		}
-		
+		System.exit(0);
+	}
+	
+	
+	private static void processInput() {
 		init = new Initializer();
 		
 		String command = PrototypeIO.getCommand();
@@ -50,7 +82,8 @@ public class PrototypeProgram {
 						}
 						break;
 					case "exit":
-						System.exit(0);
+						init.end();
+						return;
 					default:
 						PrototypeIO.printInvalidInput(command);
 						System.exit(-1);
@@ -155,11 +188,22 @@ public class PrototypeProgram {
 		Matcher m = p.matcher(command);
 		if (m.matches()) {
 			String option = m.group(1);
+			init.checkTrappedCats();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (option != null) {
 				int ticks = Integer.parseInt(m.group(2));
 				Clock.incrementTimeBy(ticks);
 			} else {
 				Clock.incrementTime();
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			return true;
 		}

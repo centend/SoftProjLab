@@ -1,0 +1,3 @@
+board(1, 3) -d "[C, M, E]"
+move cat 1 right
+exit

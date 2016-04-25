@@ -29,7 +29,7 @@ public class Rules {
 		this.playerStats = new PlayerStats(1);
 	}
 	
-	public void setInitializer(Initializer init) {
+	public synchronized void setInitializer(Initializer init) {
 		this.init = init;
 	}
 	
@@ -39,7 +39,7 @@ public class Rules {
 	 * 
 	 * @return	A reference to the PlayerStats object of the Rules
 	 */
-	public PlayerStats getStats() {
+	public synchronized PlayerStats getStats() {
 		return playerStats;
 	}
 	
@@ -52,7 +52,7 @@ public class Rules {
 	 * @param eaten	The Piece to be remove and replaced by an EmptyPiece
 	 */
 	// the 'eater' piece eats the 'eaten' piece
-	private void eat(Piece eater, Piece eaten) {
+	private synchronized void eat(Piece eater, Piece eaten) {
 		EmptyPiece newEmpty = new EmptyPiece();
 		newEmpty.setPosition(eaten.getPosition());
 		
@@ -69,13 +69,14 @@ public class Rules {
 	 * @param dir		The direction of movement from the perspective of 
 	 * 					the Visitor Piece
 	 */
-	private void moveIfPossible(MovablePiece fromPiece, MovablePiece toPiece, Direction dir) {
+	private synchronized void moveIfPossible(MovablePiece fromPiece, MovablePiece toPiece, Direction dir) {
 		// move the toPiece THEN the fromPiece (if possible)
 		toPiece.moveTo(dir);
 		Piece adjacentPiece = this.board.getAdjacentPiece(fromPiece.getPosition(), dir);
 		if (adjacentPiece != toPiece) {
 			board.switchPieces(fromPiece, adjacentPiece);
 		}
+		board.checkTrappedCats();  
 	}
 	
 	/**
@@ -104,7 +105,7 @@ public class Rules {
 	 * 
 	 * @param deadCat	The Cat to be disposed
 	 */
-	public void disposeOfBody(Cat deadCat) {
+	public synchronized void disposeOfBody(Cat deadCat) {
 		Cheese cheese = new Cheese();
 		board.putPieceAt(cheese, deadCat.getPosition());
 		init.stopCatController(deadCat);
@@ -119,7 +120,7 @@ public class Rules {
 	 * @param fromCat	The Visitor Piece
 	 * @param toRat		The Visited Piece
 	 */
-	public void resolve(Cat fromCat, Rat toRat) {
+	public synchronized void resolve(Cat fromCat, Rat toRat) {
 		PrototypeIO.printRatDies(toRat);
 		playerLosesLife();
 	}
@@ -130,7 +131,7 @@ public class Rules {
 	 * @param fromCat	The Visitor Piece
 	 * @param toCat		The Visited Piece
 	 */
-	public void resolve(Cat fromCat, Cat toCat) {
+	public synchronized void resolve(Cat fromCat, Cat toCat) {
 		// Do nothing
 	}
 
@@ -140,7 +141,7 @@ public class Rules {
 	 * @param fromCat		The Visitor Piece
 	 * @param toMovBlock	The Visited Piece
 	 */
-	public void resolve(Cat fromCat, MovableBlock toMovBlock) {
+	public synchronized void resolve(Cat fromCat, MovableBlock toMovBlock) {
 		// Do nothing		
 	}
 
@@ -150,7 +151,7 @@ public class Rules {
 	 * @param fromCat		The Visitor Piece
 	 * @param toImmoBlock	The Visited Piece
 	 */
-	public void resolve(Cat fromCat, ImmovableBlock toImmoBlock) {
+	public synchronized void resolve(Cat fromCat, ImmovableBlock toImmoBlock) {
 		// Do nothing
 	}
 	
@@ -161,7 +162,7 @@ public class Rules {
 	 * @param fromCat	The Visitor Piece
 	 * @param toEmpty	The Visited Piece
 	 */
-	public void resolve(Cat fromCat, EmptyPiece toEmpty) {
+	public synchronized void resolve(Cat fromCat, EmptyPiece toEmpty) {
 		// cat moves
 		board.switchPieces(fromCat, toEmpty);
 	}
@@ -173,7 +174,7 @@ public class Rules {
 	 * @param fromCat	The Visitor Piece
 	 * @param toCheese	The Visited Piece
 	 */
-	public void resolve(Cat fromCat, Cheese toCheese) {
+	public synchronized void resolve(Cat fromCat, Cheese toCheese) {
 		// the cat eats the cheese
 		this.eat(fromCat, toCheese);
 	}
@@ -187,7 +188,7 @@ public class Rules {
 	 * @param fromRat	The Visitor Piece
 	 * @param toRat		The Visited Piece
 	 */
-	public void resolve(Rat fromRat, Rat toRat) {
+	public synchronized void resolve(Rat fromRat, Rat toRat) {
 		// Do nothing		
 	}
 	
@@ -198,7 +199,7 @@ public class Rules {
 	 * @param fromRat	The Visitor Piece
 	 * @param toCat		The Visited Piece
 	 */
-	public void resolve(Rat fromRat, Cat toCat) {
+	public synchronized void resolve(Rat fromRat, Cat toCat) {
 		PrototypeIO.printRatDies(fromRat);
 		playerLosesLife();
 	}
@@ -213,7 +214,7 @@ public class Rules {
 	 * 						approaching the toMovBlock from the perspective
 	 * 						of the fromRat
 	 */
-	public void resolve(Rat fromRat, MovableBlock toMovBlock, Direction dir) {
+	public synchronized void resolve(Rat fromRat, MovableBlock toMovBlock, Direction dir) {
 		// move the blocks if possible
 		this.moveIfPossible(fromRat, toMovBlock, dir);
 	}
@@ -224,7 +225,7 @@ public class Rules {
 	 * @param fromRat		The Visitor Piece
 	 * @param toImmoBlock	The Visited Piece
 	 */
-	public void resolve(Rat fromRat, ImmovableBlock toImmoBlock) {
+	public synchronized void resolve(Rat fromRat, ImmovableBlock toImmoBlock) {
 		// Do nothing
 	}
 	
@@ -235,7 +236,7 @@ public class Rules {
 	 * @param fromRat	The Visitor Piece
 	 * @param toEmpty	The Visited Piece
 	 */
-	public void resolve(Rat fromRat, EmptyPiece toEmpty) {
+	public synchronized void resolve(Rat fromRat, EmptyPiece toEmpty) {
 		// the rat moves
 		board.switchPieces(fromRat, toEmpty);
 	}
@@ -248,7 +249,7 @@ public class Rules {
 	 * @param fromRat	The Visitor Piece
 	 * @param toCheese	The Visited Piece
 	 */
-	public void resolve(Rat fromRat, Cheese toCheese) {
+	public synchronized void resolve(Rat fromRat, Cheese toCheese) {
 		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromRat, toCheese);
 	}
@@ -262,7 +263,7 @@ public class Rules {
 	 * @param fromMovBlock	The Visitor Piece
 	 * @param toRat			The Visited Piece
 	 */
-	public void resolve(MovableBlock fromMovBlock, Rat toRat) {
+	public synchronized void resolve(MovableBlock fromMovBlock, Rat toRat) {
 		// Do nothing		
 	}
 
@@ -272,7 +273,7 @@ public class Rules {
 	 * @param fromMovBlock		The Visitor Piece
 	 * @param toCat				The Visited Piece
 	 */
-	public void resolve(MovableBlock fromMovBlock, Cat toCat) {
+	public synchronized void resolve(MovableBlock fromMovBlock, Cat toCat) {
 		// Do nothing
 	}
 	
@@ -286,7 +287,7 @@ public class Rules {
 	 * 						approaching the toMovBlock from the perspective
 	 * 						of the fromRat
 	 */
-	public void resolve(MovableBlock fromMovBlock, MovableBlock toMovBlock, Direction dir) {
+	public synchronized void resolve(MovableBlock fromMovBlock, MovableBlock toMovBlock, Direction dir) {
 		this.moveIfPossible(fromMovBlock, toMovBlock, dir);
 	}
 	
@@ -296,7 +297,7 @@ public class Rules {
 	 * @param fromMovBlock	The Visitor Piece
 	 * @param toImmoBlock	The Visited Piece
 	 */
-	public void resolve(MovableBlock fromMovBlock, ImmovableBlock toImmoBlock) {
+	public synchronized void resolve(MovableBlock fromMovBlock, ImmovableBlock toImmoBlock) {
 		// Do nothing
 	}
 	
@@ -307,7 +308,7 @@ public class Rules {
 	 * @param fromMovBlock	The Visitor Piece
 	 * @param toEmpty		The Visited Piece
 	 */
-	public void resolve(MovableBlock fromMovBlock, EmptyPiece toEmpty) {
+	public synchronized void resolve(MovableBlock fromMovBlock, EmptyPiece toEmpty) {
 		// the movable block is moved
 		board.switchPieces(fromMovBlock, toEmpty);
 	}
@@ -320,7 +321,7 @@ public class Rules {
 	 * @param fromMovBlock	The Visitor Piece
 	 * @param toCheese		The Visited Piece
 	 */
-	public void resolve(MovableBlock fromMovBlock, Cheese toCheese) {
+	public synchronized void resolve(MovableBlock fromMovBlock, Cheese toCheese) {
 		playerStats.addPoints(CHEESE_POINTS);
 		this.eat(fromMovBlock, toCheese);
 	}

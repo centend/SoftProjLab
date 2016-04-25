@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class CatController extends Thread {
 	private Cat cat;
-	private Boolean canContinue = false;
+	private volatile Boolean canContinue = true;
 	
 	/**
 	 * This constructor creates a new Cat object with which
@@ -49,11 +49,10 @@ public class CatController extends Thread {
 	 * pseudo-random Direction.
 	 */
 	public void run() {
-		canContinue = true;
 		int currentTime = Clock.getTime();
 		while (canContinue) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1);
 				if (currentTime < Clock.getTime()) {
 					Random rand = new Random(System.currentTimeMillis());
 					Direction[] directions = Direction.values(); 
@@ -61,7 +60,7 @@ public class CatController extends Thread {
 					currentTime = Clock.getTime();
 				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				canContinue = false;
 			}	
 		}
 	}

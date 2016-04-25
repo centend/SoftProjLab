@@ -11,7 +11,7 @@ public class TrapBox extends Thread {
 	private Rules rules;
 	private Cat cat;
 	private int startTime;
-	private Boolean canContinue = false;
+	private volatile Boolean canContinue = true;
 	
 	private final int TRAP_TIME = 5;
 	
@@ -34,17 +34,16 @@ public class TrapBox extends Thread {
 	 * Cat.
 	 */
 	public void run() {
-		canContinue = true;
 		startTime = Clock.getTime();
 		while (canContinue) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1);
 				if (Clock.getTime() >= startTime + TRAP_TIME) {
 					rules.disposeOfBody(this.cat);
 					canContinue = false;
 				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				canContinue = false;
 			}	
 		}
 	}
@@ -54,5 +53,14 @@ public class TrapBox extends Thread {
 	 */
 	public void cancel() {
 		canContinue = false;
+	}
+	
+	/**
+	 * Check to see if the TrapBox thread has been started.
+	 * 
+	 * @return	True if started.
+	 */
+	public boolean isRunning() {
+		return canContinue;
 	}
 }

@@ -23,14 +23,14 @@ public class Clock {
 	 * 
 	 * @return Current time of Clock
 	 */
-	public static int getTime() {
+	public synchronized static int getTime() {
 		return time;
 	}
 	
 	/**
 	 * Increases the value of the time attribute by one.
 	 */
-	public static void incrementTime() {
+	public synchronized static void incrementTime() {
 		time += 1;
 	}
 	
@@ -42,7 +42,7 @@ public class Clock {
 	 * @param ticks The number of units the time should 
 	 * 					be incremented by 
 	 */
-	public static void incrementTimeBy(int ticks) {
+	public synchronized static void incrementTimeBy(int ticks) {
 		if (ticks > 0) {
 			time += ticks;
 		}
@@ -51,7 +51,7 @@ public class Clock {
 	/**
 	 * Resets the value of the time attribute to zero.
 	 */
-	public void resetTime() {
+	public synchronized static void resetTime() {
 		time = 0;
 	}
 }

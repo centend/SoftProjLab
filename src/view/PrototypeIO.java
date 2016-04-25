@@ -7,6 +7,13 @@ import java.io.InputStreamReader;
 
 import model.*;
 
+/**
+ * The PrototypeIO implements the input and output functions of
+ * the Prototype.
+ * 
+ * @author ChaTeam
+ *
+ */
 public class PrototypeIO {
 	private static BufferedReader br = new BufferedReader(
 			new InputStreamReader(System.in));
@@ -61,5 +68,13 @@ public class PrototypeIO {
 	
 	public static void printInvalidInput(String input) {
 		System.out.println("Error: Invalid Input - \"" + input + "\"");
+	}
+	
+	public static void printInvalidFile(String input) {
+		System.out.println("Error: Invalid File - \"" + input + "\"");
+	}
+	
+	public static void println(String input) {
+		System.out.println(input);
 	}
 }

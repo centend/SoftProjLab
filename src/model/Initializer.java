@@ -19,7 +19,7 @@ public class Initializer {
 	
 	public Initializer() {}
 	
-	public void initBoard(int rows, int cols) {
+	public synchronized void initBoard(int rows, int cols) {
 		board = new Board(rows, cols);
 		board.getRules().setInitializer(this);
 		this.catSpawner = new CatSpawner(this);
@@ -27,13 +27,15 @@ public class Initializer {
 	}
 	
 	public synchronized void spawnNewCat() {
-		CatController newCatController = 
-				new CatController(board, catControllers.size() + 1);
-		board.putCatAtRandomEmptyPos(newCatController.getPiece());
-		catControllers.add(newCatController);
-		newCatController.start();
-		
-		PrototypeIO.printCatSpawn(newCatController.getPiece());
+		if (board.haveEmptyPiece()) {
+			CatController newCatController = 
+					new CatController(board, catControllers.size() + 1);
+			board.putCatAtRandomEmptyPos(newCatController.getPiece());
+			catControllers.add(newCatController);
+			newCatController.start();
+			
+			PrototypeIO.printCatSpawn(newCatController.getPiece());
+		}
 	}
 	
 	public synchronized void addPiece(Byte pieceSymbol, Position pos) {
@@ -65,24 +67,33 @@ public class Initializer {
 		}
 	}
 	
-	public void moveRat(int id, Direction dir) {
+	public synchronized void moveRat(int id, Direction dir) {
 		ratControllers.get(id - 1).moveRat(dir);
 	}
 	
-	public void moveCat(int id, Direction dir) {
+	public synchronized void moveCat(int id, Direction dir) {
 		catControllers.get(id - 1).moveCat(dir);
 	}
-
-	public void resetBoard() {
-		// TODO Auto-generated method stub
+	
+	public synchronized void checkTrappedCats() {
+		board.checkTrappedCats();
 	}
 
-	public void gameOver() {
-		catSpawner.cancel();
+	public synchronized void resetBoard() {
+		
+	}
+	
+	public synchronized void end() {
+		catSpawner.cancel();	
 		for (CatController catController : catControllers) {
 			catController.getPiece().releaseTrapBox();
 			catController.cancel();
 		}
+//		Clock.resetTime();
+	}
+
+	public synchronized void gameOver() {
+		this.end();
 		PrototypeIO.printGameOver();
 	}
 	

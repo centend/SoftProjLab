@@ -68,6 +68,9 @@ public class Board {
 			if (previousPiece.getClass() == EmptyPiece.class) {
 				emptyPieces.remove(previousPiece);
 			}
+			if (previousPiece.getClass() == Cat.class) {
+				cats.remove(previousPiece);
+			}
 		}
 		
 		// Adding the input Piece to the emptyPieces list if it is an EmptyPiece
@@ -75,9 +78,13 @@ public class Board {
 			emptyPieces.add((EmptyPiece)piece);
 		}
 		
+		// Adding the input Piece to the cats list if it is a Cat
+		if (piece.getClass() == Cat.class) {
+			cats.add((Cat)piece);
+		}
+		
 		this.cells[pos.getRow()][pos.getColumn()] = piece;
 		piece.setPosition(pos);
-
 	}
 		
 	/**
@@ -96,7 +103,7 @@ public class Board {
 			int index = rand.nextInt(emptyPieces.size());
 			EmptyPiece randomEmptyPiece = emptyPieces.get(index);
 			this.putPieceAt(cat, randomEmptyPiece.getPosition());
-		}
+		}	
 	}
 	
 	/**
@@ -176,7 +183,7 @@ public class Board {
 	 * updates the state of each Cat's TrapBox.
 	 * 
 	 */
-	public void checkTrappedCats() {
+	public synchronized void checkTrappedCats() {
 		for (Cat cat : cats) {
 			if (this.isTrapped(cat)) {
 				cat.startTrapBox();
@@ -203,5 +210,9 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	public synchronized boolean haveEmptyPiece() {
+		return (emptyPieces.size() > 0);
 	}
 }

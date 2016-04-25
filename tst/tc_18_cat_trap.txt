@@ -1,0 +1,3 @@
+board(1, 3) -d "[C, M]"
+tick -s 5
+exit

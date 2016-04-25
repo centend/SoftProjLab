@@ -20,7 +20,14 @@ public class Cat extends MovablePiece {
 	public Cat(Board board, int id) {
 		super(board, id);
 		trapBox = new TrapBox(board.getRules(), this);
-		trapBox.start();
+//		startTrapBox();
+	}
+	
+	/**
+	 * Starts the thread of the TrapBox of the Cat.
+	 */
+	public void startTrapBox() {
+		trapBox.start();	
 	}
 	
 	/**
@@ -70,13 +77,6 @@ public class Cat extends MovablePiece {
 	@Override
 	public void visit(Cheese cheese, Direction fromDir) {
 		this.board.getRules().resolve(this, cheese);	
-	}
-	
-	/**
-	 * Starts the thread of the TrapBox of the Cat.
-	 */
-	public void startTrapBox() {
-		trapBox.start();
 	}
 	
 	@Override
