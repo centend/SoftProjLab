@@ -189,8 +189,9 @@ public class PrototypeProgram {
 		if (m.matches()) {
 			String option = m.group(1);
 			init.checkTrappedCats();
+			// Sleeping to allow CatSpawner, CatController, and TrapBox to run
 			try {
-				Thread.sleep(10);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -200,8 +201,9 @@ public class PrototypeProgram {
 			} else {
 				Clock.incrementTime();
 			}
+			// Sleeping to allow CatSpawner, CatController, and TrapBox to run
 			try {
-				Thread.sleep(10);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

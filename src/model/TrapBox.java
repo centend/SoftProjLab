@@ -12,6 +12,7 @@ public class TrapBox extends Thread {
 	private Cat cat;
 	private int startTime;
 	private volatile Boolean canContinue = true;
+	private Boolean started = false;
 	
 	private final int TRAP_TIME = 5;
 	
@@ -34,6 +35,7 @@ public class TrapBox extends Thread {
 	 * Cat.
 	 */
 	public void run() {
+		started = true;
 		startTime = Clock.getTime();
 		while (canContinue) {
 			try {
@@ -62,5 +64,9 @@ public class TrapBox extends Thread {
 	 */
 	public boolean isRunning() {
 		return canContinue;
+	}
+
+	public boolean getStarted() {
+		return started;
 	}
 }

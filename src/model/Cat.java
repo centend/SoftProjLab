@@ -27,7 +27,9 @@ public class Cat extends MovablePiece {
 	 * Starts the thread of the TrapBox of the Cat.
 	 */
 	public void startTrapBox() {
-		trapBox.start();	
+		if (!trapBox.getStarted()) {
+			trapBox.start();	
+		}	
 	}
 	
 	/**
