@@ -20,7 +20,7 @@ public class Position {
 	 * @param column	The column of the position. Indexed from 0 where 0 is
 	 * 					leftmost column number. 
 	 */
-	Position(int row, int column) {
+	public Position(int row, int column) {
 		this.row = row;
 		this.column = column;
 	}
@@ -41,5 +41,9 @@ public class Position {
 	 */
 	public int getColumn() {
 		return column;
+	}
+	
+	public String toString() {
+		return String.format("(%d, %d)", row, column);
 	}
 }

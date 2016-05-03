@@ -1,0 +1,3 @@
+board(1, 3) -d "[R, M, R]"
+move rat 1 right
+exit

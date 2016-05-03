@@ -9,17 +9,15 @@ package model;
  */
 public class ImmovableBlock extends Piece {
 
-	public ImmovableBlock() {
-		SkeletonDisplay.printMethodName();
-	}
+	public ImmovableBlock() {}
 	
 	@Override
 	public void accept(MovablePiece p, Direction fromDir) {
-		SkeletonDisplay.printMethodName();
-		SkeletonDisplay.increaseTab();
-		
 		p.visit(this, fromDir);
-		
-		SkeletonDisplay.decreaseTab();
+	}
+	
+	@Override
+	public String getSymbol() {
+		return "I";
 	}
 }
